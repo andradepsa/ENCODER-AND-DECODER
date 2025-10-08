@@ -64,10 +64,8 @@ It combines **mathematical encoding** and **two-factor authentication (2FA)**, e
 
 ---
 
-## 🔐 Encoded Text&Image
 
-The text ,imagem below is encoded.  
-To find out what it says, use the website at:
+## 🔐 Encode text and image, and then decode use the website at:
 
 👉 [https://k10.netlify.app/projetos/text&image](https://k10.netlify.app/projetos/text&image)
 
