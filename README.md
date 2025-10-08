@@ -64,7 +64,7 @@ It combines **mathematical encoding** and **two-factor authentication (2FA)**, e
 
 ---
 
-## 🔐 Encoded Text
+## 🔐 Encoded Text&Image
 
 The text below is encoded.  
 To find out what it says, use the website at:
