@@ -68,6 +68,7 @@ It combines **mathematical encoding** and **two-factor authentication (2FA)**, e
 ## 🔐 Encode text and image, and then decode use the website at:
 
 👉 [https://k10.netlify.app/projetos/text&image](https://k10.netlify.app/projetos/text&image)
+👉 [https://doi.org/10.5281/zenodo.17298224](https://doi.org/10.5281/zenodo.17298224)
 
 ---
 
