@@ -1,3 +1,5 @@
+PROTECTION AGAINST DIGITAL GIANTS: BIGINT + TOTP ENCODING — UNASSAILABLE BY QUANTUM BRUTE FORCE WITHOUT THE SECRET
+
 # 🧠 ENCODER-AND-DECODER
 
 **The BigInt + TOTP Encoder and Decoder** is a web-based tool built in **HTML** and **JavaScript** that allows users to encode and decode **text and images** securely using encryption based on large integers (**BigInt**) and **time-based authentication (TOTP – Time-Based One-Time Password)**.
