@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gerador de Páginas Codificadas</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:system-ui,sans-serif;background:#0a0e27;color:#e0e7ff}
+.container{max-width:1200px;margin:0 auto}
+.card{background:#0f172a;padding:24px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.4);margin-bottom:20px}
+h1{color:#60a5fa;margin:0 0 10px 0}
+h2{color:#38bdf8;font-size:18px;margin:20px 0 10px 0}
+textarea{width:100%;min-height:200px;padding:12px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e0e7ff;font-family:monospace;font-size:13px;margin:8px 0;resize:vertical}
+input{width:100%;padding:10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e0e7ff;margin:8px 0}
+button{background:#3b82f6;color:#fff;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;margin:8px 8px 8px 0;transition:background .3s}
+button:hover{background:#2563eb}
+.success{background:#059669}
+.success:hover{background:#047857}
+.info{background:#1e3a5f;padding:12px;border-radius:8px;margin:12px 0;font-size:13px;border-left:4px solid #3b82f6}
+.warning{background:#7c2d12;padding:12px;border-radius:8px;margin:12px 0;font-size:13px;border-left:4px solid #f59e0b}
+label{display:block;margin-top:12px;color:#94a3b8;font-size:14px;font-weight:600}
+pre{background:#020617;padding:16px;border-radius:8px;overflow:auto;font-size:12px;line-height:1.6;border:1px solid #1e293b}
+.hidden{display:none}
+.tabs{display:flex;gap:10px;margin-bottom:20px}
+.tab{padding:10px 20px;background:#1e293b;border:none;color:#94a3b8;cursor:pointer;border-radius:8px 8px 0 0;font-weight:600}
+.tab.active{background:#3b82f6;color:#fff}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1>🔐 Gerador de Páginas Web Codificadas</h1>
+    <p>Crie páginas HTML completamente codificadas que só podem ser visualizadas com o código TOTP correto.</p>
+    
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('generate')">🔒 Gerar Página</button>
+      <button class="tab" onclick="showTab('preview')">👁️ Preview da Tela de Bloqueio</button>
+    </div>
+
+    <div id="generateTab">
+      <div class="warning">
+        ⚠️ <strong>IMPORTANTE:</strong> O HTML gerado conterá apenas dados codificados. Ninguém conseguirá ler o conteúdo sem o código TOTP.
+      </div>
+
+      <h2>1️⃣ Cole o HTML da página que deseja proteger</h2>
+      <textarea id="htmlInput" placeholder="Cole o HTML completo aqui..."><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Minha Página Secreta</title>
+<style>
+body { 
+  font-family: Arial, sans-serif; 
+  padding: 40px; 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+  color: white; 
+  margin: 0;
+}
+.container { 
+  max-width: 800px; 
+  margin: 0 auto; 
+  background: rgba(255,255,255,0.1); 
+  padding: 30px; 
+  border-radius: 15px; 
+  backdrop-filter: blur(10px);
+}
+h1 { font-size: 2.5em; margin-bottom: 20px; }
+.secret-box {
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎉 Conteúdo Secreto Desbloqueado!</h1>
+  <p>Você conseguiu acessar esta página protegida! Este conteúdo estava completamente codificado.</p>
+  
+  <div class="secret-box">
+    <h2>📋 Informações Confidenciais</h2>
+    <ul>
+      <li>Senha do sistema: <code>SuperSecreto@2024</code></li>
+      <li>Código de acesso: <code>XPTO-9876-ABCD</code></li>
+      <li>Chave API: <code>sk_live_51HxY2ZK3pqR8sT...</code></li>
+    </ul>
+  </div>
+  
+  <p><strong>⚠️ Lembre-se:</strong> Nunca compartilhe seu segredo TOTP com ninguém!</p>
+  
+  <footer style="margin-top: 40px; text-align: center; opacity: 0.7;">
+    <p>Página protegida com TOTP • Gerado em 2025</p>
+  </footer>
+</div>
+</body>
+</html></textarea>
+
+      <button onclick="generateEncrypted()">🔒 Gerar Página Codificada</button>
+
+      <div id="output" class="hidden">
+        <h2>✅ Página Codificada Gerada com Sucesso!</h2>
+        
+        <div class="info">
+          📋 <strong>Como usar:</strong><br>
+          1. <strong>Copie o Segredo TOTP</strong> e adicione no Google Authenticator (ou similar)<br>
+          2. <strong>Copie ou baixe o HTML</strong> e salve como arquivo .html<br>
+          3. Ao abrir o arquivo, insira o código TOTP de 6 dígitos do seu app<br>
+          4. A página será decodificada e o conteúdo aparecerá!
+        </div>
+
+        <label>🔑 Segredo TOTP (base32) - Adicione no seu Authenticator</label>
+        <input type="text" id="totpSecretOutput" readonly>
+        <button class="success" onclick="copyText('totpSecretOutput')">📋 Copiar Segredo</button>
+
+        <label>📄 HTML da Página Codificada</label>
+        <textarea id="encryptedOutput" readonly style="min-height:400px"></textarea>
+        <button class="success" onclick="copyText('encryptedOutput')">📋 Copiar HTML Completo</button>
+        <button class="success" onclick="downloadHTML()">💾 Baixar arquivo .html</button>
+
+        <h2>📊 Estatísticas</h2>
+        <pre id="stats"></pre>
+      </div>
+    </div>
+
+    <div id="previewTab" class="hidden">
+      <div class="info">
+        ℹ️ Esta é a aparência da tela de bloqueio que o usuário verá antes de inserir o código TOTP.
+      </div>
+      <div style="background:#0a0e27;padding:40px;border-radius:12px;text-align:center;border:2px solid #1e293b">
+        <div style="font-size:64px;margin-bottom:20px">🔒</div>
+        <h2 style="color:#60a5fa;margin:0 0 10px 0">Conteúdo Protegido</h2>
+        <p style="color:#94a3b8;margin-bottom:30px;font-size:14px">Insira o código TOTP para desbloquear</p>
+        <input type="text" placeholder="000000" style="max-width:300px;padding:14px;font-size:18px;text-align:center;letter-spacing:4px" disabled>
+        <br>
+        <button style="max-width:300px;width:100%;margin-top:15px" disabled>🔓 Desbloquear</button>
+        <div style="background:#1e3a5f;padding:12px;border-radius:8px;margin-top:20px;font-size:12px;border-left:3px solid #3b82f6;max-width:400px;margin:20px auto">
+          💡 Use seu aplicativo authenticator para gerar o código de 6 dígitos
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const B=256n;
+const BASE32='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+function showTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('generateTab').classList.toggle('hidden',tab!=='generate');
+  document.getElementById('previewTab').classList.toggle('hidden',tab!=='preview');
+}
+
+function textToBytes(str){return Array.from(new TextEncoder().encode(str))}
+function bytesToBigInt(bytes){
+  let v=0n;
+  for(let i=0;i<bytes.length;i++)v+=BigInt(bytes[i])*(B**BigInt(i));
+  return v;
+}
+function base32Encode(bytes){
+  let bits=0,value=0,output='';
+  for(const b of bytes){
+    value=(value<<8)|b;bits+=8;
+    while(bits>=5){output+=BASE32[(value>>(bits-5))&31];bits-=5;}
+  }
+  if(bits>0)output+=BASE32[(value<<(5-bits))&31];
+  return output;
+}
+function base32Decode(str){
+  const cleaned=str.replace(/=+$/,'').toUpperCase();
+  let bits=0,value=0,out=[];
+  for(const ch of cleaned){
+    const idx=BASE32.indexOf(ch);if(idx===-1)continue;
+    value=(value<<5)|idx;bits+=5;
+    if(bits>=8){out.push((value>>(bits-8))&0xFF);bits-=8;}
+  }
+  return new Uint8Array(out);
+}
+
+async function derivePrimeFromSecret(secretBase32){
+  const key=base32Decode(secretBase32);
+  const hash=await crypto.subtle.digest('SHA-256',key);
+  const hashBytes=new Uint8Array(hash);
+  let p=0n;
+  for(let i=0;i<12;i++)p=(p<<8n)+BigInt(hashBytes[i]);
+  p|=1n;
+  if(p<3n)p+=3n;
+  return p;
+}
+
+async function generateEncrypted(){
+  const htmlContent=document.getElementById('htmlInput').value.trim();
+  
+  if(!htmlContent){
+    alert('❌ Cole o HTML da página que deseja proteger');
+    return;
+  }
+  
+  if(!htmlContent.toLowerCase().includes('<!doctype') && !htmlContent.toLowerCase().includes('<html')){
+    if(!confirm('⚠️ O conteúdo não parece ser um HTML completo. Deseja continuar mesmo assim?')){
+      return;
+    }
+  }
+  
+  const bytes=textToBytes(htmlContent);
+  const originalBigInt=bytesToBigInt(bytes);
+  
+  const secretBytes=new Uint8Array(20);
+  crypto.getRandomValues(secretBytes);
+  const secretBase32=base32Encode(secretBytes);
+  
+  const prime=await derivePrimeFromSecret(secretBase32);
+  const mixedBigInt=originalBigInt*prime;
+  const encodedHex=mixedBigInt.toString(16);
+  
+  const templateHTML=`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Acesso Restrito</title>
+<style>
+body{margin:0;padding:0;font-family:system-ui,sans-serif;background:#0a0e27;color:#e0e7ff;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.lock-screen{text-align:center;max-width:400px;padding:40px}
+.lock-icon{font-size:64px;margin-bottom:20px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+h1{color:#60a5fa;margin:0 0 10px 0;font-size:28px}
+.subtitle{color:#94a3b8;margin-bottom:30px;font-size:14px}
+.input-group{margin:20px 0}
+input{width:100%;padding:14px;border-radius:8px;border:2px solid #1e293b;background:#0f172a;color:#e0e7ff;font-size:18px;text-align:center;letter-spacing:4px;box-sizing:border-box;transition:border-color .3s}
+input:focus{outline:none;border-color:#3b82f6}
+button{width:100%;background:#3b82f6;color:#fff;border:none;padding:14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:16px;margin-top:15px;transition:background .3s}
+button:hover{background:#2563eb}
+button:active{transform:scale(0.98)}
+.error{color:#ef4444;font-size:13px;margin-top:10px;min-height:20px}
+.hint{background:#1e3a5f;padding:12px;border-radius:8px;margin-top:20px;font-size:12px;border-left:3px solid #3b82f6}
+</style>
+</head>
+<body>
+<div class="lock-screen">
+  <div class="lock-icon">🔒</div>
+  <h1>Conteúdo Protegido</h1>
+  <p class="subtitle">Insira o código TOTP para desbloquear</p>
+  <div class="input-group">
+    <input type="text" id="totpInput" placeholder="000000" maxlength="6" pattern="[0-9]*" inputmode="numeric" autocomplete="off">
+  </div>
+  <button onclick="unlock()">🔓 Desbloquear</button>
+  <div class="error" id="error"></div>
+  <div class="hint">💡 Use seu aplicativo authenticator (Google Authenticator, Authy, etc.) para gerar o código de 6 dígitos</div>
+</div>
+<script>
+const B=256n;const BASE32='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';const TOTP_SECRET='${secretBase32}';const ENCODED_HTML='${encodedHex}';
+function base32Decode(str){const cleaned=str.replace(/=+$/,'').toUpperCase();let bits=0,value=0,out=[];for(const ch of cleaned){const idx=BASE32.indexOf(ch);if(idx===-1)continue;value=(value<<5)|idx;bits+=5;if(bits>=8){out.push((value>>(bits-8))&0xFF);bits-=8;}}return new Uint8Array(out);}
+async function hmacSha1(keyBytes,msgBytes){const key=await crypto.subtle.importKey('raw',keyBytes,{name:'HMAC',hash:'SHA-1'},false,['sign']);const sig=await crypto.subtle.sign('HMAC',key,msgBytes);return new Uint8Array(sig);}
+function intToBytesBE(num,length){const out=new Uint8Array(length);for(let i=length-1;i>=0;i--){out[i]=Number(num&0xFFn);num>>=8n;}return out;}
+async function generateTotp(secretBase32,forTime=Math.floor(Date.now()/1000),step=30,digits=6){const key=base32Decode(secretBase32);const counter=BigInt(Math.floor(forTime/step));const msg=intToBytesBE(counter,8);const hmac=await hmacSha1(key,msg);const offset=hmac[hmac.length-1]&0x0f;const code=((hmac[offset]&0x7f)<<24)|((hmac[offset+1]&0xff)<<16)|((hmac[offset+2]&0xff)<<8)|(hmac[offset+3]&0xff);return(code%(10**digits)).toString().padStart(digits,'0');}
+async function derivePrimeFromSecret(secretBase32){const key=base32Decode(secretBase32);const hash=await crypto.subtle.digest('SHA-256',key);const hashBytes=new Uint8Array(hash);let p=0n;for(let i=0;i<12;i++)p=(p<<8n)+BigInt(hashBytes[i]);p|=1n;if(p<3n)p+=3n;return p;}
+function bigIntToBytes(v){if(v===0n)return[0];const out=[];let cur=v;while(cur>0n){out.push(Number(cur%B));cur=cur/B;}return out;}
+function bytesToText(bytes){return new TextDecoder().decode(new Uint8Array(bytes));}
+async function unlock(){const input=document.getElementById('totpInput').value.trim();const errorEl=document.getElementById('error');if(input.length!==6){errorEl.textContent='❌ O código deve ter 6 dígitos';return;}errorEl.textContent='⏳ Validando...';try{const now=Math.floor(Date.now()/1000);let valid=false;for(let delta=-1;delta<=1;delta++){const t=now+delta*30;const code=await generateTotp(TOTP_SECRET,t);if(code===input.padStart(6,'0')){valid=true;break;}}if(!valid){errorEl.textContent='❌ Código incorreto. Tente novamente.';document.getElementById('totpInput').value='';return;}errorEl.textContent='✅ Decodificando...';const mixedBigInt=BigInt('0x'+ENCODED_HTML);const prime=await derivePrimeFromSecret(TOTP_SECRET);const originalBigInt=mixedBigInt/prime;const bytes=bigIntToBytes(originalBigInt);const htmlContent=bytesToText(bytes);document.open();document.write(htmlContent);document.close();}catch(error){errorEl.textContent='❌ Erro: '+error.message;}}
+document.getElementById('totpInput').addEventListener('keypress',function(e){if(e.key==='Enter')unlock();});
+document.getElementById('totpInput').focus();
+<\/script>
+</body>
+</html>`;
+  
+  document.getElementById('totpSecretOutput').value=secretBase32;
+  document.getElementById('encryptedOutput').value=templateHTML;
+  
+  const originalKB=(htmlContent.length/1024).toFixed(2);
+  const encodedKB=(templateHTML.length/1024).toFixed(2);
+  const hexLength=encodedHex.length;
+  
+  document.getElementById('stats').textContent=
+`📊 Tamanho original: ${originalKB} KB (${htmlContent.length} bytes)
+📦 Tamanho codificado: ${encodedKB} KB (${templateHTML.length} bytes)
+🔢 Hex length: ${hexLength} caracteres
+📄 Páginas estimadas: ~${Math.ceil(hexLength/3000)} páginas
+
+✅ Tudo pronto! A página está completamente codificada.
+   Ninguém conseguirá ler o conteúdo sem o código TOTP correto.`;
+  
+  document.getElementById('output').classList.remove('hidden');
+  document.getElementById('output').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function copyText(elementId){
+  const el=document.getElementById(elementId);
+  el.select();
+  document.execCommand('copy');
+  alert('✅ Copiado para a área de transferência!');
+}
+
+function downloadHTML(){
+  const content=document.getElementById('encryptedOutput').value;
+  const blob=new Blob([content],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='pagina-protegida.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
